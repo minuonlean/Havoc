@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Programming — Sri Lanka A/L ICT</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d47;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --python-blue: #3b82f6;
+    --python-yellow: #fbbf24;
+    --red: #ef4444;
+    --green: #10b981;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,14,26,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex; align-items: center; gap: 20px;
+    flex-wrap: wrap;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-snake {
+    font-size: 28px; line-height:1;
+  }
+  .logo-text { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px; }
+  .logo-sub { font-size: 0.7rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .progress-bar-wrap {
+    flex: 1; min-width: 160px;
+    height: 6px; background: var(--border); border-radius: 99px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.6s ease;
+    width: 0%;
+  }
+  .progress-label {
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    color: var(--muted); white-space: nowrap;
+  }
+
+  /* ─── LAYOUT ─── */
+  .app { display: flex; min-height: calc(100vh - 58px); }
+
+  /* ─── SIDEBAR ─── */
+  aside {
+    width: 300px; min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 20px 0 40px;
+    flex-shrink: 0;
+  }
+  .sidebar-section {
+    margin-bottom: 4px;
+  }
+  .sidebar-chapter {
+    padding: 10px 20px 8px;
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .sidebar-chapter:hover { background: var(--surface2); }
+  .sidebar-chapter.active {
+    border-left-color: var(--accent);
+    background: rgba(0,212,255,0.06);
+  }
+  .chapter-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; font-weight: 700;
+    color: var(--accent);
+    background: rgba(0,212,255,0.1);
+    padding: 2px 7px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .chapter-title { font-size: 0.82rem; font-weight: 600; line-height: 1.3; }
+  .chapter-status {
+    margin-left: auto; font-size: 0.7rem;
+    color: var(--accent3);
+  }
+  .sidebar-lessons { display: none; padding: 0 0 6px 0; }
+  .sidebar-lessons.open { display: block; }
+  .sidebar-lesson {
+    padding: 6px 20px 6px 52px;
+    font-size: 0.78rem; color: var(--muted);
+    cursor: pointer; transition: color 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .sidebar-lesson:hover { color: var(--text); }
+  .sidebar-lesson.active { color: var(--accent); border-left-color: var(--accent); }
+  .sidebar-lesson.done { color: var(--accent3); }
+  .sidebar-lesson.done::before { content: "✓ "; }
+
+  /* ─── MAIN CONTENT ─── */
+  main {
+    flex: 1; overflow-y: auto;
+    padding: 0;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, #0d1b2e 0%, #0f0620 60%, #0a0e1a 100%);
+    padding: 80px 60px 60px;
+    position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 80% 50%, rgba(0,212,255,0.07), transparent),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(124,58,237,0.1), transparent);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; color: var(--accent);
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.25);
+    padding: 4px 12px; border-radius: 99px;
+    display: inline-block; margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800; line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    font-size: 1rem; color: #94a3b8;
+    max-width: 600px; line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .hero-stats {
+    display: flex; gap: 32px; flex-wrap: wrap;
+  }
+  .stat { text-align: left; }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+  /* ─── CONTENT AREA ─── */
+  .content-area {
+    padding: 40px 60px;
+    max-width: 900px;
+  }
+
+  /* ─── LESSON CARD ─── */
+  .lesson-card {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .lesson-card.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: none; } }
+
+  .lesson-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lesson-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 2px;
+    color: var(--accent2);
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .lesson-title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800; letter-spacing: -0.5px; line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .lesson-desc { color: #94a3b8; line-height: 1.7; font-size: 0.95rem; }
+
+  /* ─── CONTENT BLOCKS ─── */
+  .section-heading {
+    font-size: 1.1rem; font-weight: 700;
+    margin: 32px 0 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-heading::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+  .section-heading .icon { font-size: 1rem; }
+
+  p.body-text { color: #94a3b8; line-height: 1.8; margin-bottom: 14px; font-size: 0.95rem; }
+
+  /* ─── CODE BLOCKS ─── */
+  .code-block {
+    background: #060d1a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .code-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang {
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    color: var(--python-yellow);
+    background: rgba(251,191,36,0.1);
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .copy-btn {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--muted); background: none; border: 1px solid var(--border);
+    padding: 3px 10px; border-radius: 4px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+  pre {
+    padding: 20px 22px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem;
+    line-height: 1.7; overflow-x: auto;
+    color: #c9d1d9;
+  }
+  .kw { color: #ff79c6; }
+  .fn { color: #8be9fd; }
+  .str { color: #f1fa8c; }
+  .num { color: #bd93f9; }
+  .cm { color: #6272a4; font-style: italic; }
+  .op { color: #ff79c6; }
+  .cls { color: #50fa7b; }
+  .var { color: #e2e8f0; }
+  .out { color: #69ff47; }
+
+  /* ─── INFO BOXES ─── */
+  .info-box {
+    border-radius: 10px; padding: 18px 20px;
+    margin: 20px 0;
+    border-left: 4px solid;
+    font-size: 0.9rem; line-height: 1.7;
+  }
+  .info-box.note {
+    background: rgba(0,212,255,0.05);
+    border-color: var(--accent);
+    color: #a0c8d8;
+  }
+  .info-box.tip {
+    background: rgba(16,185,129,0.05);
+    border-color: var(--accent3);
+    color: #a0c8c0;
+  }
+  .info-box.warn {
+    background: rgba(245,158,11,0.05);
+    border-color: var(--accent4);
+    color: #c8b87a;
+  }
+  .info-box strong { display: block; margin-bottom: 6px; color: var(--text); }
+
+  /* ─── CONCEPT GRID ─── */
+  .concept-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+    gap: 14px; margin: 20px 0;
+  }
+  .concept-card {
+    background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px; transition: border-color 0.2s;
+  }
+  .concept-card:hover { border-color: var(--accent); }
+  .concept-icon { font-size: 1.5rem; margin-bottom: 8px; }
+  .concept-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+  .concept-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+  /* ─── TABLE ─── */
+  .data-table {
+    width: 100%; border-collapse: collapse; margin: 20px 0;
+    font-size: 0.85rem;
+  }
+  .data-table th {
+    background: var(--surface2); font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--accent); padding: 10px 14px; text-align: left;
+    border-bottom: 2px solid var(--border);
+  }
+  .data-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    color: #94a3b8; vertical-align: top; line-height: 1.5;
+  }
+  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .data-table code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem; color: var(--python-yellow);
+    background: rgba(251,191,36,0.08);
+    padding: 1px 6px; border-radius: 3px;
+  }
+
+  /* ─── QUIZ ─── */
+  .quiz-section {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px; margin-top: 40px;
+  }
+  .quiz-title {
+    font-size: 1rem; font-weight: 700; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .quiz-desc { font-size: 0.83rem; color: var(--muted); margin-bottom: 24px; }
+  .quiz-q { margin-bottom: 22px; }
+  .quiz-question { font-weight: 600; font-size: 0.92rem; margin-bottom: 12px; line-height: 1.5; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-option {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 16px;
+    cursor: pointer; font-size: 0.85rem; color: var(--text);
+    transition: all 0.18s; text-align: left;
+    font-family: inherit;
+  }
+  .quiz-option:hover { border-color: var(--accent); color: var(--accent); }
+  .quiz-option.correct { background: rgba(16,185,129,0.12); border-color: var(--accent3); color: var(--accent3); }
+  .quiz-option.wrong { background: rgba(239,68,68,0.1); border-color: var(--red); color: var(--red); }
+  .quiz-option:disabled { cursor: default; }
+  .quiz-feedback { font-size: 0.8rem; margin-top: 8px; min-height: 20px; }
+  .quiz-feedback.ok { color: var(--accent3); }
+  .quiz-feedback.no { color: var(--red); }
+  .quiz-submit {
+    margin-top: 10px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; padding: 10px 28px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; border: none; border-radius: 8px;
+    cursor: pointer; transition: opacity 0.2s;
+  }
+  .quiz-submit:hover { opacity: 0.85; }
+
+  /* ─── NAV BUTTONS ─── */
+  .lesson-nav {
+    display: flex; gap: 14px; margin-top: 48px; padding-top: 28px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    padding: 11px 24px; border-radius: 8px; cursor: pointer;
+    font-size: 0.85rem; transition: all 0.2s; border: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-btn.prev { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .nav-btn.prev:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.next {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+  }
+  .nav-btn.next:hover { opacity: 0.85; }
+  .nav-btn.complete {
+    background: linear-gradient(135deg, var(--accent3), #059669);
+    color: #fff;
+  }
+
+  /* ─── TAG ─── */
+  .tag {
+    display: inline-block; font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    padding: 2px 8px; border-radius: 4px; margin: 2px;
+  }
+  .tag-blue { background: rgba(59,130,246,0.15); color: #93c5fd; }
+  .tag-green { background: rgba(16,185,129,0.12); color: #6ee7b7; }
+  .tag-yellow { background: rgba(251,191,36,0.12); color: #fde68a; }
+  .tag-red { background: rgba(239,68,68,0.12); color: #fca5a5; }
+  .tag-purple { background: rgba(124,58,237,0.15); color: #c4b5fd; }
+
+  /* ─── ALGORITHM FLOWCHART ─── */
+  .flowchart {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+    margin: 24px 0; font-size: 0.82rem; font-family: 'IBM Plex Mono', monospace;
+  }
+  .fc-node {
+    padding: 10px 24px; text-align: center; min-width: 200px;
+    color: var(--text);
+  }
+  .fc-start, .fc-end {
+    background: linear-gradient(135deg, var(--accent2), #4c1d95);
+    border-radius: 99px; font-weight: 600;
+  }
+  .fc-process {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .fc-decision {
+    background: rgba(245,158,11,0.12); border: 1px solid var(--accent4);
+    border-radius: 6px; font-style: italic; color: var(--accent4);
+  }
+  .fc-io {
+    background: rgba(16,185,129,0.1); border: 1px solid var(--accent3);
+    border-radius: 6px; color: var(--accent3);
+  }
+  .fc-arrow { color: var(--muted); font-size: 1.2rem; line-height: 1; padding: 3px 0; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    aside { width: 240px; }
+    .content-area { padding: 28px 28px; }
+    .hero { padding: 50px 28px 40px; }
+  }
+  @media (max-width: 680px) {
+    .app { flex-direction: column; }
+    aside { width: 100%; height: auto; max-height: 260px; border-right: none; border-bottom: 1px solid var(--border); }
+    .content-area { padding: 24px 18px; }
+    .hero { padding: 40px 18px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-snake">🐍</div>
+    <div>
+      <div class="logo-text">Python Programming</div>
+      <div class="logo-sub">SRI LANKA · GCE A/L ICT · UNIT 09</div>
+    </div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">0 / 14 completed</div>
+</header>
+
+<div class="app">
+
+<!-- ─── SIDEBAR ─── -->
+<aside id="sidebar">
+  <!-- dynamically built by JS -->
+</aside>
+
+<!-- ─── MAIN ─── -->
+<main id="main">
+  <div id="heroView">
+    <div class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-badge">GCE A/L ICT — UNIT 09 — GRADE 13</div>
+      <h1>Python <span>Programming</span><br>Complete Course</h1>
+      <p>Master every topic in the Sri Lanka A/L ICT Python syllabus — from algorithms and control structures to OOP, data structures, file handling, and database management.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">14</div><div class="stat-label">Lessons</div></div>
+        <div class="stat"><div class="stat-num">12–18</div><div class="stat-label">Exam Marks</div></div>
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Syllabus Coverage</div></div>
+        <div class="stat"><div class="stat-num">56</div><div class="stat-label">Quiz Questions</div></div>
+      </div>
+    </div>
+    <div class="content-area" style="max-width:900px">
+      <div class="section-heading"><span class="icon">📚</span> Course Modules</div>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="concept-icon">🔍</div><div class="concept-name">Problem Solving</div><div class="concept-desc">Top-down design, algorithms, flowcharts, pseudocode</div></div>
+        <div class="concept-card"><div class="concept-icon">⚙️</div><div class="concept-name">Programming Paradigms</div><div class="concept-desc">Imperative, OOP, functional, logic programming</div></div>
+        <div class="concept-card"><div class="concept-icon">🔄</div><div class="concept-name">Translators & IDEs</div><div class="concept-desc">Compilers, interpreters, assemblers, IDLE, VS Code</div></div>
+        <div class="concept-card"><div class="concept-icon">🧱</div><div class="concept-name">Python Basics</div><div class="concept-desc">Variables, data types, operators, I/O</div></div>
+        <div class="concept-card"><div class="concept-icon">🔀</div><div class="concept-name">Control Structures</div><div class="concept-desc">if/elif/else, for, while, break, continue</div></div>
+        <div class="concept-card"><div class="concept-icon">🧩</div><div class="concept-name">Sub-programs</div><div class="concept-desc">Functions, parameters, scope, recursion</div></div>
+        <div class="concept-card"><div class="concept-icon">📦</div><div class="concept-name">Data Structures</div><div class="concept-desc">Lists, tuples, sets, dictionaries, strings</div></div>
+        <div class="concept-card"><div class="concept-icon">🗂️</div><div class="concept-name">File Handling</div><div class="concept-desc">Read/write text files, CSV, error handling</div></div>
+        <div class="concept-card"><div class="concept-icon">🗃️</div><div class="concept-name">Databases (SQLite)</div><div class="concept-desc">Create, insert, query, update, delete with Python</div></div>
+        <div class="concept-card"><div class="concept-icon">🔍</div><div class="concept-name">Searching</div><div class="concept-desc">Linear search, binary search, analysis</div></div>
+        <div class="concept-card"><div class="concept-icon">🗄️</div><div class="concept-name">Sorting</div><div class="concept-desc">Bubble, selection, insertion sort algorithms</div></div>
+        <div class="concept-card"><div class="concept-icon">🏗️</div><div class="concept-name">OOP</div><div class="concept-desc">Classes, objects, inheritance, polymorphism</div></div>
+      </div>
+      <div class="info-box note" style="margin-top:24px">
+        <strong>📌 How to use this course</strong>
+        Click any lesson in the sidebar to begin. Complete lessons in order for the best experience. Each lesson ends with a quiz to test your understanding. Track your progress with the bar at the top.
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Cards -->
+  <div class="content-area" id="lessonContainer" style="display:none; max-width:900px">
+  </div>
+</main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  COURSE DATA
+// ═══════════════════════════════════════════
+const CHAPTERS = [
+  {
+    id: "ch1", num: "01", title: "Problem-Solving Process",
+    lessons: [
+      {
+        id: "l1", title: "Problem Solving & Algorithms",
+        tag: "Foundation",
+        desc: "Understand the problem-solving process and how to express solutions as algorithms using pseudocode and flowcharts.",
+        content: `
+<div class="section-heading"><span class="icon">🎯</span> What is Problem Solving in Programming?</div>
+<p class="body-text">Programming is fundamentally about solving problems. The A/L ICT syllabus defines a structured problem-solving process that transforms a real-world problem into a working program.</p>
+<div class="concept-grid">
+  <div class="concept-card"><div class="concept-icon">1️⃣</div><div class="concept-name">Define the Problem</div><div class="concept-desc">Clearly understand what inputs are given and what output is expected.</div></div>
+  <div class="concept-card"><div class="concept-icon">2️⃣</div><div class="concept-name">Analyse</div><div class="concept-desc">Break the problem into smaller sub-problems (top-down design).</div></div>
+  <div class="concept-card"><div class="concept-icon">3️⃣</div><div class="concept-name">Design Algorithm</div><div class="concept-desc">Write a step-by-step solution in pseudocode or flowchart form.</div></div>
+  <div class="concept-card"><div class="concept-icon">4️⃣</div><div class="concept-name">Code</div><div class="concept-desc">Translate the algorithm into Python source code.</div></div>
+  <div class="concept-card"><div class="concept-icon">5️⃣</div><div class="concept-name">Test & Debug</div><div class="concept-desc">Run with test data, find and fix errors (syntax, logic, runtime).</div></div>
+  <div class="concept-card"><div class="concept-icon">6️⃣</div><div class="concept-name">Document</div><div class="concept-desc">Write comments and user guides so others can understand the solution.</div></div>
+</div>
+<div class="section-heading"><span class="icon">🗺️</span> Top-Down Design & Stepwise Refinement</div>
+<p class="body-text"><strong>Top-Down Design</strong> means starting from the main goal and breaking it into smaller, manageable modules. Each module is then further broken down — this is called <strong>Stepwise Refinement</strong>.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PSEUDOCODE</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># Top-down: Calculate average of N numbers</span>
+BEGIN CalculateAverage
+  INPUT n
+  total ← 0
+  FOR i FROM 1 TO n DO
+    INPUT number
+    total ← total + number
+  END FOR
+  average ← total / n
+  OUTPUT average
+END</pre>
+</div>
+<div class="section-heading"><span class="icon">📊</span> Flowchart Symbols</div>
+<table class="data-table">
+  <thead><tr><th>Symbol</th><th>Shape</th><th>Use</th></tr></thead>
+  <tbody>
+    <tr><td>Terminator</td><td>Oval / Rounded Rectangle</td><td>Start and End of a flowchart</td></tr>
+    <tr><td>Process</td><td>Rectangle</td><td>Calculation or assignment step</td></tr>
+    <tr><td>Decision</td><td>Diamond</td><td>Yes/No or True/False condition</td></tr>
+    <tr><td>Input/Output</td><td>Parallelogram</td><td>Reading input or displaying output</td></tr>
+    <tr><td>Flow Arrow</td><td>Arrow</td><td>Direction of program flow</td></tr>
+  </tbody>
+</table>
+<div class="section-heading"><span class="icon">🔢</span> Example Flowchart — Check Even/Odd</div>
+<div class="flowchart">
+  <div class="fc-node fc-start">START</div>
+  <div class="fc-arrow">↓</div>
+  <div class="fc-node fc-io">INPUT number</div>
+  <div class="fc-arrow">↓</div>
+  <div class="fc-node fc-decision">number % 2 == 0 ?</div>
+  <div class="fc-arrow">↓ YES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NO ↓</div>
+  <div style="display:flex;gap:60px;align-items:flex-start;">
+    <div class="flowchart" style="margin:0"><div class="fc-node fc-io" style="background:rgba(16,185,129,0.1);border-color:var(--accent3)">PRINT "Even"</div></div>
+    <div class="flowchart" style="margin:0"><div class="fc-node fc-io" style="background:rgba(239,68,68,0.1);border-color:var(--red)">PRINT "Odd"</div></div>
+  </div>
+  <div class="fc-arrow">↓</div>
+  <div class="fc-node fc-end">END</div>
+</div>
+`,
+        quiz: [
+          { q: "What is the first step in the problem-solving process?", opts: ["Write the code", "Define and understand the problem", "Test the program", "Draw a flowchart"], ans: 1 },
+          { q: "Which shape is used for a DECISION in a flowchart?", opts: ["Rectangle", "Oval", "Diamond", "Parallelogram"], ans: 2 },
+          { q: "What does 'stepwise refinement' mean?", opts: ["Writing code without planning", "Gradually breaking down modules into smaller steps", "Running the program step by step", "Fixing bugs one by one"], ans: 1 },
+          { q: "Which flowchart shape is used for INPUT/OUTPUT?", opts: ["Rectangle", "Diamond", "Oval", "Parallelogram"], ans: 3 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch2", num: "02", title: "Programming Paradigms & Translators",
+    lessons: [
+      {
+        id: "l2", title: "Programming Paradigms",
+        tag: "Theory",
+        desc: "Compare different programming paradigms: imperative, object-oriented, functional, and logic programming.",
+        content: `
+<div class="section-heading"><span class="icon">🧠</span> What is a Programming Paradigm?</div>
+<p class="body-text">A programming paradigm is a style or approach to programming. Different paradigms solve problems in different ways. Python supports multiple paradigms, but A/L ICT focuses mainly on imperative and OOP.</p>
+<table class="data-table">
+  <thead><tr><th>Paradigm</th><th>Key Idea</th><th>Example Languages</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Imperative</strong></td><td>Step-by-step instructions telling the computer exactly what to do</td><td>Python, C, Pascal</td></tr>
+    <tr><td><strong>Object-Oriented (OOP)</strong></td><td>Organises code into objects that have data (attributes) and behaviour (methods)</td><td>Python, Java, C++</td></tr>
+    <tr><td><strong>Functional</strong></td><td>Treats computation as evaluation of mathematical functions; avoids state changes</td><td>Haskell, Lisp, Python (partial)</td></tr>
+    <tr><td><strong>Logic</strong></td><td>States facts and rules; the system finds solutions</td><td>Prolog</td></tr>
+  </tbody>
+</table>
+<div class="info-box note"><strong>📌 A/L Exam Tip</strong>Python is classified primarily as an imperative and object-oriented language. You may be asked to identify a paradigm from a code sample.</div>
+<div class="section-heading"><span class="icon">🔄</span> Program Translators</div>
+<p class="body-text">Source code written by programmers must be translated into machine code before the computer can execute it. There are three types of translators:</p>
+<div class="concept-grid">
+  <div class="concept-card"><div class="concept-icon">📦</div><div class="concept-name">Compiler</div><div class="concept-desc">Translates the entire source code at once into an executable file. Faster at run time. Reports all errors after translation. Example: C, C++.</div></div>
+  <div class="concept-card"><div class="concept-icon">▶️</div><div class="concept-name">Interpreter</div><div class="concept-desc">Translates and executes one line at a time. Stops at the first error. Easier to debug. Python uses an interpreter.</div></div>
+  <div class="concept-card"><div class="concept-icon">🔧</div><div class="concept-name">Assembler</div><div class="concept-desc">Translates assembly language (low-level mnemonic code) into machine code.</div></div>
+</div>
+<div class="section-heading"><span class="icon">💻</span> IDEs (Integrated Development Environments)</div>
+<p class="body-text">An IDE combines code editing, running, debugging, and project management into one application.</p>
+<table class="data-table">
+  <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>Code Editor</td><td>Syntax highlighting, auto-completion, indentation</td></tr>
+    <tr><td>Run / Execute</td><td>Run the Python program directly from the IDE</td></tr>
+    <tr><td>Debugger</td><td>Set breakpoints, step through code, inspect variables</td></tr>
+    <tr><td>Error Messages</td><td>Highlights line numbers and type of error</td></tr>
+  </tbody>
+</table>
+<div class="info-box tip"><strong>✅ Popular IDEs for Python</strong>IDLE (built-in with Python) · Visual Studio Code · PyCharm · Thonny (recommended for beginners)</div>
+`,
+        quiz: [
+          { q: "Python primarily belongs to which programming paradigm(s)?", opts: ["Logic only", "Imperative and Object-Oriented", "Functional only", "Assembly level"], ans: 1 },
+          { q: "Which translator executes a program ONE LINE AT A TIME?", opts: ["Compiler", "Assembler", "Interpreter", "Linker"], ans: 2 },
+          { q: "An assembler translates:", opts: ["Python into C++", "Assembly language into machine code", "English into pseudocode", "High-level code into bytecode"], ans: 1 },
+          { q: "Which is TRUE about a compiler vs an interpreter?", opts: ["Interpreter produces a standalone executable", "Compiler translates one line at a time", "Compiler translates the entire program before execution", "Both translate one statement at a time"], ans: 2 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch3", num: "03", title: "Python Basics",
+    lessons: [
+      {
+        id: "l3", title: "Variables, Data Types & Operators",
+        tag: "Core Python",
+        desc: "Learn Python variables, the five core data types, arithmetic/comparison/logical operators, and input/output.",
+        content: `
+<div class="section-heading"><span class="icon">📦</span> Variables & Assignment</div>
+<p class="body-text">A variable is a named storage location in memory. In Python, you do not declare a type — the type is inferred from the value assigned.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># Variable assignment</span>
+<span class="var">name</span> = <span class="str">"Kasun"</span>          <span class="cm"># str</span>
+<span class="var">age</span> = <span class="num">17</span>               <span class="cm"># int</span>
+<span class="var">height</span> = <span class="num">1.75</span>           <span class="cm"># float</span>
+<span class="var">is_student</span> = <span class="kw">True</span>       <span class="cm"># bool</span>
+
+<span class="cm"># Multiple assignment</span>
+<span class="var">x</span>, <span class="var">y</span>, <span class="var">z</span> = <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>
+
+<span class="cm"># type() returns the data type</span>
+<span class="fn">print</span>(<span class="fn">type</span>(age))        <span class="cm"># &lt;class 'int'&gt;</span></pre>
+</div>
+<div class="section-heading"><span class="icon">🏷️</span> Python Data Types</div>
+<table class="data-table">
+  <thead><tr><th>Type</th><th>Keyword</th><th>Example</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Integer</td><td><code>int</code></td><td><code>42, -7, 0</code></td><td>Whole numbers</td></tr>
+    <tr><td>Float</td><td><code>float</code></td><td><code>3.14, -0.5</code></td><td>Decimal numbers</td></tr>
+    <tr><td>String</td><td><code>str</code></td><td><code>"hello", 'world'</code></td><td>Text in quotes</td></tr>
+    <tr><td>Boolean</td><td><code>bool</code></td><td><code>True, False</code></td><td>Logical values</td></tr>
+    <tr><td>None</td><td><code>NoneType</code></td><td><code>None</code></td><td>Absence of value</td></tr>
+  </tbody>
+</table>
+<div class="section-heading"><span class="icon">➕</span> Operators</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># Arithmetic Operators</span>
+<span class="var">a</span>, <span class="var">b</span> = <span class="num">10</span>, <span class="num">3</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">+</span> <span class="var">b</span>)   <span class="cm"># 13  Addition</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">-</span> <span class="var">b</span>)   <span class="cm"># 7   Subtraction</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">*</span> <span class="var">b</span>)   <span class="cm"># 30  Multiplication</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">/</span> <span class="var">b</span>)   <span class="cm"># 3.333 Division (float)</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">//</span> <span class="var">b</span>)  <span class="cm"># 3   Integer (floor) division</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">%</span> <span class="var">b</span>)   <span class="cm"># 1   Modulus (remainder)</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">**</span> <span class="var">b</span>)  <span class="cm"># 1000 Exponentiation</span>
+
+<span class="cm"># Comparison Operators → return bool</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">==</span> <span class="var">b</span>)  <span class="cm"># False</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">!=</span> <span class="var">b</span>)  <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">></span> <span class="var">b</span>)   <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">>=</span> <span class="var">b</span>)  <span class="cm"># True</span>
+
+<span class="cm"># Logical Operators</span>
+<span class="fn">print</span>(<span class="kw">True</span> <span class="kw">and</span> <span class="kw">False</span>)  <span class="cm"># False</span>
+<span class="fn">print</span>(<span class="kw">True</span> <span class="kw">or</span> <span class="kw">False</span>)   <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="kw">not</span> <span class="kw">True</span>)        <span class="cm"># False</span></pre>
+</div>
+<div class="section-heading"><span class="icon">📥</span> Input & Output</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># input() always returns a string!</span>
+<span class="var">name</span> = <span class="fn">input</span>(<span class="str">"Enter your name: "</span>)
+<span class="var">age</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter your age: "</span>))  <span class="cm"># convert to int</span>
+
+<span class="fn">print</span>(<span class="str">"Hello,"</span>, <span class="var">name</span>)
+<span class="fn">print</span>(<span class="str">f"You are </span>{<span class="var">age</span>}<span class="str"> years old."</span>)  <span class="cm"># f-string</span>
+<span class="fn">print</span>(<span class="str">"Sum:"</span>, <span class="var">age</span> <span class="op">+</span> <span class="num">5</span>, <span class="var">sep</span>=<span class="str">""</span>, <span class="var">end</span>=<span class="str">"\n"</span>)</pre>
+</div>
+<div class="info-box warn"><strong>⚠️ Common Mistake</strong>input() returns a string. If you need a number, convert with int() or float() — otherwise arithmetic will fail or concatenate strings.</div>
+`,
+        quiz: [
+          { q: "What is the result of 17 % 5 in Python?", opts: ["3", "2", "3.4", "0"], ans: 1 },
+          { q: "What data type does input() always return?", opts: ["int", "float", "str", "bool"], ans: 2 },
+          { q: "What is the result of 10 // 3?", opts: ["3.333", "3", "4", "1"], ans: 1 },
+          { q: "Which operator checks EQUALITY in Python?", opts: ["=", "!=", "==", ":="], ans: 2 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch4", num: "04", title: "Control Structures",
+    lessons: [
+      {
+        id: "l4", title: "Selection: if / elif / else",
+        tag: "Control Flow",
+        desc: "Use conditional statements to make decisions in Python programs.",
+        content: `
+<div class="section-heading"><span class="icon">🔀</span> Selection Statements</div>
+<p class="body-text">Selection allows the program to choose different execution paths based on conditions. Python uses <code>if</code>, <code>elif</code>, and <code>else</code>.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="var">mark</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter mark: "</span>))
+
+<span class="kw">if</span> <span class="var">mark</span> <span class="op">>=</span> <span class="num">75</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: A"</span>)
+<span class="kw">elif</span> <span class="var">mark</span> <span class="op">>=</span> <span class="num">65</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: B"</span>)
+<span class="kw">elif</span> <span class="var">mark</span> <span class="op">>=</span> <span class="num">55</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: C"</span>)
+<span class="kw">elif</span> <span class="var">mark</span> <span class="op">>=</span> <span class="num">35</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: S"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: F"</span>)</pre>
+</div>
+<div class="info-box note"><strong>📌 Python Indentation Rule</strong>Python uses indentation (4 spaces or 1 tab) to define code blocks — NOT curly braces. Missing or incorrect indentation causes an IndentationError.</div>
+<div class="section-heading"><span class="icon">🔁</span> Iteration: for Loop</div>
+<p class="body-text">A <code>for</code> loop repeats a block of code a fixed number of times (definite iteration).</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># range(start, stop, step)</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    <span class="fn">print</span>(<span class="var">i</span>)          <span class="cm"># prints 1 2 3 4 5</span>
+
+<span class="cm"># Iterating over a list</span>
+<span class="var">fruits</span> = [<span class="str">"apple"</span>, <span class="str">"mango"</span>, <span class="str">"papaya"</span>]
+<span class="kw">for</span> <span class="var">fruit</span> <span class="kw">in</span> <span class="var">fruits</span>:
+    <span class="fn">print</span>(<span class="var">fruit</span>)
+
+<span class="cm"># Nested for loop — multiplication table</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">4</span>):
+    <span class="kw">for</span> <span class="var">j</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">4</span>):
+        <span class="fn">print</span>(<span class="var">i</span><span class="op">*</span><span class="var">j</span>, <span class="var">end</span>=<span class="str">"\t"</span>)
+    <span class="fn">print</span>()</pre>
+</div>
+<div class="section-heading"><span class="icon">🔁</span> Iteration: while Loop</div>
+<p class="body-text">A <code>while</code> loop repeats as long as a condition is True (indefinite/conditional iteration).</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># Sum until user enters 0</span>
+<span class="var">total</span> = <span class="num">0</span>
+<span class="var">num</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter number (0 to stop): "</span>))
+<span class="kw">while</span> <span class="var">num</span> <span class="op">!=</span> <span class="num">0</span>:
+    <span class="var">total</span> <span class="op">+=</span> <span class="var">num</span>
+    <span class="var">num</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter number (0 to stop): "</span>))
+<span class="fn">print</span>(<span class="str">"Total:"</span>, <span class="var">total</span>)
+
+<span class="cm"># break and continue</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>):
+    <span class="kw">if</span> <span class="var">i</span> <span class="op">==</span> <span class="num">5</span>:
+        <span class="kw">break</span>      <span class="cm"># exit the loop</span>
+    <span class="kw">if</span> <span class="var">i</span> <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>:
+        <span class="kw">continue</span>   <span class="cm"># skip to next iteration</span>
+    <span class="fn">print</span>(<span class="var">i</span>)      <span class="cm"># prints 1 3</span></pre>
+</div>
+`,
+        quiz: [
+          { q: "Which loop is best when you know the number of repetitions in advance?", opts: ["while loop", "do-while loop", "for loop", "repeat loop"], ans: 2 },
+          { q: "What does 'break' do inside a loop?", opts: ["Skips the current iteration", "Exits the loop immediately", "Restarts the loop", "Raises an error"], ans: 1 },
+          { q: "How many times does range(2, 8, 2) iterate?", opts: ["6", "4", "3", "5"], ans: 2 },
+          { q: "What is the purpose of 'continue' in a loop?", opts: ["Exit the loop", "Skip the rest of the current iteration and go to next", "Pause execution", "Jump to the start of the program"], ans: 1 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch5", num: "05", title: "Sub-Programs (Functions)",
+    lessons: [
+      {
+        id: "l5", title: "Functions, Parameters & Recursion",
+        tag: "Modular Code",
+        desc: "Define and call functions, use parameters and return values, understand scope, and write recursive functions.",
+        content: `
+<div class="section-heading"><span class="icon">🧩</span> Defining & Calling Functions</div>
+<p class="body-text">A function (sub-program) is a named block of reusable code. Functions reduce repetition and make code easier to read and debug.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">def</span> <span class="fn">greet</span>(<span class="var">name</span>):           <span class="cm"># 'name' is a parameter</span>
+    <span class="fn">print</span>(<span class="str">f"Hello, </span>{<span class="var">name</span>}<span class="str">!"</span>)
+
+<span class="fn">greet</span>(<span class="str">"Kamali"</span>)              <span class="cm"># "Kamali" is an argument</span>
+<span class="fn">greet</span>(<span class="str">"Nimal"</span>)
+
+<span class="cm"># Function with return value</span>
+<span class="kw">def</span> <span class="fn">square</span>(<span class="var">n</span>):
+    <span class="kw">return</span> <span class="var">n</span> <span class="op">**</span> <span class="num">2</span>
+
+<span class="var">result</span> = <span class="fn">square</span>(<span class="num">7</span>)
+<span class="fn">print</span>(<span class="var">result</span>)               <span class="cm"># 49</span>
+
+<span class="cm"># Default parameter values</span>
+<span class="kw">def</span> <span class="fn">power</span>(<span class="var">base</span>, <span class="var">exp</span>=<span class="num">2</span>):
+    <span class="kw">return</span> <span class="var">base</span> <span class="op">**</span> <span class="var">exp</span>
+
+<span class="fn">print</span>(<span class="fn">power</span>(<span class="num">5</span>))             <span class="cm"># 25 (uses default exp=2)</span>
+<span class="fn">print</span>(<span class="fn">power</span>(<span class="num">2</span>, <span class="num">10</span>))         <span class="cm"># 1024</span></pre>
+</div>
+<div class="section-heading"><span class="icon">🔭</span> Scope: Local vs Global Variables</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="var">x</span> = <span class="num">100</span>                   <span class="cm"># global variable</span>
+
+<span class="kw">def</span> <span class="fn">my_func</span>():
+    <span class="var">y</span> = <span class="num">50</span>                <span class="cm"># local variable</span>
+    <span class="fn">print</span>(<span class="var">x</span>)              <span class="cm"># can read global</span>
+    <span class="fn">print</span>(<span class="var">y</span>)              <span class="cm"># can use local</span>
+
+<span class="fn">my_func</span>()
+<span class="cm"># print(y)  → NameError: y is not defined outside</span></pre>
+</div>
+<div class="section-heading"><span class="icon">🌀</span> Recursion</div>
+<p class="body-text">A recursive function calls itself. Every recursive function needs a <strong>base case</strong> (to stop) and a <strong>recursive case</strong>.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># Factorial: n! = n × (n-1)!</span>
+<span class="kw">def</span> <span class="fn">factorial</span>(<span class="var">n</span>):
+    <span class="kw">if</span> <span class="var">n</span> <span class="op">==</span> <span class="num">0</span> <span class="kw">or</span> <span class="var">n</span> <span class="op">==</span> <span class="num">1</span>:   <span class="cm"># base case</span>
+        <span class="kw">return</span> <span class="num">1</span>
+    <span class="kw">return</span> <span class="var">n</span> <span class="op">*</span> <span class="fn">factorial</span>(<span class="var">n</span> <span class="op">-</span> <span class="num">1</span>)   <span class="cm"># recursive case</span>
+
+<span class="fn">print</span>(<span class="fn">factorial</span>(<span class="num">5</span>))   <span class="cm"># 120</span>
+<span class="cm"># Trace: 5 * 4 * 3 * 2 * 1 * 1 = 120</span></pre>
+</div>
+<div class="info-box warn"><strong>⚠️ Recursion vs Iteration</strong>Recursion is elegant but uses more memory (call stack). For A/L exams, be able to TRACE a recursive function step-by-step and identify the base case.</div>
+`,
+        quiz: [
+          { q: "What keyword is used to return a value from a function in Python?", opts: ["output", "result", "return", "yield"], ans: 2 },
+          { q: "A variable defined inside a function is called a:", opts: ["Global variable", "Local variable", "Static variable", "Public variable"], ans: 1 },
+          { q: "What is the BASE CASE in recursion?", opts: ["The first call to the function", "The condition that STOPS the recursion", "The return value", "The recursive call"], ans: 1 },
+          { q: "What is factorial(4) using the recursive definition?", opts: ["24", "12", "16", "8"], ans: 0 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch6", num: "06", title: "Data Structures",
+    lessons: [
+      {
+        id: "l6", title: "Lists, Tuples, Sets & Dictionaries",
+        tag: "Data Structures",
+        desc: "Master Python's four key collection types and their operations.",
+        content: `
+<div class="section-heading"><span class="icon">📋</span> Lists — Ordered, Mutable</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="var">marks</span> = [<span class="num">85</span>, <span class="num">72</span>, <span class="num">90</span>, <span class="num">68</span>, <span class="num">95</span>]
+
+<span class="cm"># Indexing (0-based)</span>
+<span class="fn">print</span>(<span class="var">marks</span>[<span class="num">0</span>])           <span class="cm"># 85 (first)</span>
+<span class="fn">print</span>(<span class="var">marks</span>[<span class="op">-</span><span class="num">1</span>])          <span class="cm"># 95 (last)</span>
+<span class="fn">print</span>(<span class="var">marks</span>[<span class="num">1</span>:<span class="num">4</span>])         <span class="cm"># [72, 90, 68] (slicing)</span>
+
+<span class="cm"># Common list methods</span>
+<span class="var">marks</span>.<span class="fn">append</span>(<span class="num">88</span>)          <span class="cm"># add to end</span>
+<span class="var">marks</span>.<span class="fn">insert</span>(<span class="num">2</span>, <span class="num">77</span>)       <span class="cm"># insert at index 2</span>
+<span class="var">marks</span>.<span class="fn">remove</span>(<span class="num">68</span>)          <span class="cm"># remove first occurrence</span>
+<span class="var">marks</span>.<span class="fn">sort</span>()               <span class="cm"># sort ascending</span>
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="var">marks</span>))         <span class="cm"># number of elements</span>
+
+<span class="cm"># List comprehension</span>
+<span class="var">squares</span> = [<span class="var">x</span><span class="op">**</span><span class="num">2</span> <span class="kw">for</span> <span class="var">x</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>)]
+<span class="fn">print</span>(<span class="var">squares</span>)            <span class="cm"># [1, 4, 9, 16, 25]</span></pre>
+</div>
+<div class="section-heading"><span class="icon">🔒</span> Tuples — Ordered, Immutable</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="var">coords</span> = (<span class="num">6.927</span>, <span class="num">79.861</span>)  <span class="cm"># latitude, longitude Colombo</span>
+<span class="fn">print</span>(<span class="var">coords</span>[<span class="num">0</span>])          <span class="cm"># 6.927</span>
+<span class="cm"># coords[0] = 7  ← TypeError! Tuples cannot be changed</span>
+
+<span class="cm"># Tuple unpacking</span>
+<span class="var">lat</span>, <span class="var">lon</span> = <span class="var">coords</span>
+<span class="fn">print</span>(<span class="str">f"Lat: </span>{<span class="var">lat</span>}<span class="str">, Lon: </span>{<span class="var">lon</span>}<span class="str">"</span>)</pre>
+</div>
+<div class="section-heading"><span class="icon">🔡</span> Dictionaries — Key-Value Pairs</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="var">student</span> = {
+    <span class="str">"name"</span>: <span class="str">"Amara"</span>,
+    <span class="str">"age"</span>: <span class="num">17</span>,
+    <span class="str">"grade"</span>: <span class="str">"A"</span>
+}
+
+<span class="fn">print</span>(<span class="var">student</span>[<span class="str">"name"</span>])    <span class="cm"># Amara</span>
+<span class="var">student</span>[<span class="str">"age"</span>] = <span class="num">18</span>        <span class="cm"># update value</span>
+<span class="var">student</span>[<span class="str">"school"</span>] = <span class="str">"Royal"</span>  <span class="cm"># add new key</span>
+<span class="kw">del</span> <span class="var">student</span>[<span class="str">"grade"</span>]       <span class="cm"># delete key</span>
+
+<span class="cm"># Iterate over dictionary</span>
+<span class="kw">for</span> <span class="var">key</span>, <span class="var">value</span> <span class="kw">in</span> <span class="var">student</span>.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="var">key</span>, <span class="str">":"</span>, <span class="var">value</span>)</pre>
+</div>
+<div class="section-heading"><span class="icon">📊</span> Comparison Table</div>
+<table class="data-table">
+  <thead><tr><th>Type</th><th>Syntax</th><th>Ordered?</th><th>Mutable?</th><th>Duplicates?</th></tr></thead>
+  <tbody>
+    <tr><td>List</td><td><code>[1, 2, 3]</code></td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+    <tr><td>Tuple</td><td><code>(1, 2, 3)</code></td><td>✅ Yes</td><td>❌ No</td><td>✅ Yes</td></tr>
+    <tr><td>Set</td><td><code>{1, 2, 3}</code></td><td>❌ No</td><td>✅ Yes</td><td>❌ No</td></tr>
+    <tr><td>Dictionary</td><td><code>{"a": 1}</code></td><td>✅ (Python 3.7+)</td><td>✅ Yes</td><td>Keys: ❌</td></tr>
+  </tbody>
+</table>
+`,
+        quiz: [
+          { q: "Which data structure is IMMUTABLE (cannot be changed)?", opts: ["List", "Dictionary", "Set", "Tuple"], ans: 3 },
+          { q: "What does marks.append(100) do?", opts: ["Inserts 100 at index 0", "Adds 100 to the end of the list", "Replaces the last element with 100", "Sorts the list then adds 100"], ans: 1 },
+          { q: "How do you access the value 'Amara' from: student = {'name': 'Amara'}?", opts: ["student(0)", "student['name']", "student.name", "student{name}"], ans: 1 },
+          { q: "Which collection does NOT allow duplicate values?", opts: ["List", "Tuple", "Set", "Dictionary values"], ans: 2 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch7", num: "07", title: "Strings",
+    lessons: [
+      {
+        id: "l7", title: "String Operations & Methods",
+        tag: "Core Python",
+        desc: "Manipulate text data using Python's rich set of string operations and methods.",
+        content: `
+<div class="section-heading"><span class="icon">📝</span> String Basics</div>
+<p class="body-text">Strings are sequences of characters enclosed in single or double quotes. They are <strong>immutable</strong> — you cannot change individual characters.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="var">s</span> = <span class="str">"Hello, Sri Lanka!"</span>
+
+<span class="cm"># Indexing and slicing</span>
+<span class="fn">print</span>(<span class="var">s</span>[<span class="num">0</span>])             <span class="cm"># H</span>
+<span class="fn">print</span>(<span class="var">s</span>[<span class="op">-</span><span class="num">1</span>])            <span class="cm"># !</span>
+<span class="fn">print</span>(<span class="var">s</span>[<span class="num">7</span>:<span class="num">17</span>])          <span class="cm"># Sri Lanka</span>
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="var">s</span>))           <span class="cm"># 18</span>
+
+<span class="cm"># String methods</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">upper</span>())         <span class="cm"># HELLO, SRI LANKA!</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">lower</span>())         <span class="cm"># hello, sri lanka!</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">replace</span>(<span class="str">"Hello"</span>, <span class="str">"Hi"</span>))   <span class="cm"># Hi, Sri Lanka!</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">count</span>(<span class="str">"l"</span>))     <span class="cm"># 3</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">find</span>(<span class="str">"Sri"</span>))    <span class="cm"># 7 (index of substring)</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">startswith</span>(<span class="str">"Hello"</span>))  <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">split</span>(<span class="str">", "</span>))    <span class="cm"># ['Hello', 'Sri Lanka!']</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">strip</span>())         <span class="cm"># removes leading/trailing spaces</span>
+
+<span class="cm"># String concatenation and repetition</span>
+<span class="fn">print</span>(<span class="str">"Python"</span> <span class="op">+</span> <span class="str">" ICT"</span>)  <span class="cm"># Python ICT</span>
+<span class="fn">print</span>(<span class="str">"Ha"</span> <span class="op">*</span> <span class="num">3</span>)           <span class="cm"># HaHaHa</span>
+
+<span class="cm"># f-string formatting</span>
+<span class="var">name</span>, <span class="var">score</span> = <span class="str">"Saman"</span>, <span class="num">88</span>
+<span class="fn">print</span>(<span class="str">f"{<span class="var">name</span>} scored {<span class="var">score</span>:.2f}%"</span>)  <span class="cm"># Saman scored 88.00%</span></pre>
+</div>
+<div class="info-box tip"><strong>✅ Iterating over a String</strong>You can use a for loop to process each character: <br><code>for ch in "hello": print(ch)</code></div>
+`,
+        quiz: [
+          { q: "What does 'PYTHON'[2:5] return?", opts: ["PYT", "THO", "HON", "YTH"], ans: 1 },
+          { q: "Which method removes whitespace from both ends of a string?", opts: ["remove()", "clean()", "strip()", "trim()"], ans: 2 },
+          { q: "What is the result of 'abc'.upper()?", opts: ["abc", "Abc", "ABC", "aBC"], ans: 2 },
+          { q: "What does 'hello world'.split() return?", opts: ["['helloworld']", "('hello','world')", "['hello', 'world']", "{'hello', 'world'}"], ans: 2 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch8", num: "08", title: "File Handling",
+    lessons: [
+      {
+        id: "l8", title: "Reading & Writing Files",
+        tag: "File I/O",
+        desc: "Open, read, write, and close text files; handle errors with try/except; work with CSV data.",
+        content: `
+<div class="section-heading"><span class="icon">🗂️</span> Opening Files</div>
+<p class="body-text">Python uses the built-in <code>open()</code> function to work with files. Always close a file after use, or use the <code>with</code> statement which closes it automatically.</p>
+<table class="data-table">
+  <thead><tr><th>Mode</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>'r'</code></td><td>Read (default). File must exist.</td></tr>
+    <tr><td><code>'w'</code></td><td>Write. Creates new file or overwrites existing.</td></tr>
+    <tr><td><code>'a'</code></td><td>Append. Adds to end of existing file.</td></tr>
+    <tr><td><code>'r+'</code></td><td>Read and write.</td></tr>
+  </tbody>
+</table>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># Writing to a file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">f</span>.<span class="fn">write</span>(<span class="str">"Amara,85\n"</span>)
+    <span class="var">f</span>.<span class="fn">write</span>(<span class="str">"Nimal,92\n"</span>)
+    <span class="var">f</span>.<span class="fn">write</span>(<span class="str">"Kamali,78\n"</span>)
+
+<span class="cm"># Reading entire file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">content</span> = <span class="var">f</span>.<span class="fn">read</span>()
+    <span class="fn">print</span>(<span class="var">content</span>)
+
+<span class="cm"># Reading line by line</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="kw">for</span> <span class="var">line</span> <span class="kw">in</span> <span class="var">f</span>:
+        <span class="var">parts</span> = <span class="var">line</span>.<span class="fn">strip</span>().<span class="fn">split</span>(<span class="str">","</span>)
+        <span class="fn">print</span>(<span class="str">f"Name: </span>{<span class="var">parts</span>[<span class="num">0</span>]}<span class="str">, Mark: </span>{<span class="var">parts</span>[<span class="num">1</span>]}<span class="str">"</span>)
+
+<span class="cm"># Appending to a file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.txt"</span>, <span class="str">"a"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">f</span>.<span class="fn">write</span>(<span class="str">"Saman,88\n"</span>)</pre>
+</div>
+<div class="section-heading"><span class="icon">🛡️</span> Error Handling with try/except</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">try</span>:
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="str">"missing.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+        <span class="fn">print</span>(<span class="var">f</span>.<span class="fn">read</span>())
+<span class="kw">except</span> <span class="cls">FileNotFoundError</span>:
+    <span class="fn">print</span>(<span class="str">"Error: File does not exist!"</span>)
+<span class="kw">except</span> <span class="cls">IOError</span> <span class="kw">as</span> <span class="var">e</span>:
+    <span class="fn">print</span>(<span class="str">f"IO Error: </span>{<span class="var">e</span>}<span class="str">"</span>)
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="str">"Done."</span>)   <span class="cm"># always runs</span></pre>
+</div>
+`,
+        quiz: [
+          { q: "Which file mode ADDS data to the end of an existing file?", opts: ["'w'", "'r'", "'a'", "'x'"], ans: 2 },
+          { q: "What is the advantage of using 'with open(...)' ?", opts: ["It reads files faster", "It automatically closes the file", "It encrypts the file", "It only works with text files"], ans: 1 },
+          { q: "Which exception is raised when a file does not exist?", opts: ["FileError", "IOError", "FileNotFoundError", "ReadError"], ans: 2 },
+          { q: "What does f.read() return?", opts: ["A list of lines", "The first line only", "The entire file as one string", "Number of bytes"], ans: 2 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch9", num: "09", title: "Object-Oriented Programming",
+    lessons: [
+      {
+        id: "l9", title: "Classes, Objects & Inheritance",
+        tag: "OOP",
+        desc: "Model real-world entities using classes and objects; apply the four pillars of OOP.",
+        content: `
+<div class="section-heading"><span class="icon">🏗️</span> Classes and Objects</div>
+<p class="body-text">A <strong>class</strong> is a blueprint or template. An <strong>object</strong> is an instance of a class. OOP is the primary paradigm for larger Python programs.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="cm"># Class attribute (shared by all instances)</span>
+    <span class="var">school</span> = <span class="str">"National School"</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">age</span>, <span class="var">mark</span>):
+        <span class="cm"># Instance attributes</span>
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">age</span>  = <span class="var">age</span>
+        <span class="var">self</span>.<span class="var">mark</span> = <span class="var">mark</span>
+
+    <span class="kw">def</span> <span class="fn">get_grade</span>(<span class="var">self</span>):
+        <span class="kw">if</span> <span class="var">self</span>.<span class="var">mark</span> <span class="op">>=</span> <span class="num">75</span>: <span class="kw">return</span> <span class="str">"A"</span>
+        <span class="kw">elif</span> <span class="var">self</span>.<span class="var">mark</span> <span class="op">>=</span> <span class="num">65</span>: <span class="kw">return</span> <span class="str">"B"</span>
+        <span class="kw">else</span>: <span class="kw">return</span> <span class="str">"C"</span>
+
+    <span class="kw">def</span> <span class="fn">display</span>(<span class="var">self</span>):
+        <span class="fn">print</span>(<span class="str">f"{<span class="var">self</span>.<span class="var">name</span>} | Age: {<span class="var">self</span>.<span class="var">age</span>} | Grade: {<span class="var">self</span>.<span class="fn">get_grade</span>()}"</span>)
+
+<span class="cm"># Creating objects</span>
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Amara"</span>, <span class="num">17</span>, <span class="num">88</span>)
+<span class="var">s2</span> = <span class="cls">Student</span>(<span class="str">"Nimal"</span>, <span class="num">18</span>, <span class="num">62</span>)
+
+<span class="var">s1</span>.<span class="fn">display</span>()     <span class="cm"># Amara | Age: 17 | Grade: A</span>
+<span class="var">s2</span>.<span class="fn">display</span>()     <span class="cm"># Nimal | Age: 18 | Grade: C</span>
+<span class="fn">print</span>(<span class="cls">Student</span>.<span class="var">school</span>)   <span class="cm"># National School</span></pre>
+</div>
+<div class="section-heading"><span class="icon">🧬</span> Inheritance</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">class</span> <span class="cls">ALStudent</span>(<span class="cls">Student</span>):     <span class="cm"># inherits from Student</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">age</span>, <span class="var">mark</span>, <span class="var">stream</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(<span class="var">name</span>, <span class="var">age</span>, <span class="var">mark</span>)  <span class="cm"># call parent __init__</span>
+        <span class="var">self</span>.<span class="var">stream</span> = <span class="var">stream</span>
+
+    <span class="kw">def</span> <span class="fn">display</span>(<span class="var">self</span>):           <span class="cm"># METHOD OVERRIDING</span>
+        <span class="fn">super</span>().<span class="fn">display</span>()
+        <span class="fn">print</span>(<span class="str">f"  Stream: </span>{<span class="var">self</span>.<span class="var">stream</span>}<span class="str">"</span>)
+
+<span class="var">al</span> = <span class="cls">ALStudent</span>(<span class="str">"Kamali"</span>, <span class="num">17</span>, <span class="num">91</span>, <span class="str">"Technology"</span>)
+<span class="var">al</span>.<span class="fn">display</span>()</pre>
+</div>
+<div class="section-heading"><span class="icon">🏛️</span> The 4 Pillars of OOP</div>
+<div class="concept-grid">
+  <div class="concept-card"><div class="concept-icon">📦</div><div class="concept-name">Encapsulation</div><div class="concept-desc">Bundling data and methods in a class; hiding internal details (private attributes with __).</div></div>
+  <div class="concept-card"><div class="concept-icon">🧬</div><div class="concept-name">Inheritance</div><div class="concept-desc">A child class inherits attributes and methods from a parent class.</div></div>
+  <div class="concept-card"><div class="concept-icon">🔄</div><div class="concept-name">Polymorphism</div><div class="concept-desc">Different classes can use the same method name but behave differently (method overriding).</div></div>
+  <div class="concept-card"><div class="concept-icon">🎭</div><div class="concept-name">Abstraction</div><div class="concept-desc">Hiding complex implementation details and exposing only necessary interfaces.</div></div>
+</div>
+`,
+        quiz: [
+          { q: "What is the purpose of __init__ in a Python class?", opts: ["Delete an object", "Initialize instance attributes when an object is created", "Define class-level methods", "Return the object as a string"], ans: 1 },
+          { q: "What OOP concept allows a child class to reuse attributes from a parent class?", opts: ["Encapsulation", "Polymorphism", "Inheritance", "Abstraction"], ans: 2 },
+          { q: "What does super().__init__() do?", opts: ["Creates a new class", "Calls the parent class constructor", "Deletes the parent class", "Overrides the parent class"], ans: 1 },
+          { q: "What is encapsulation in OOP?", opts: ["Making a class inherit from another", "Hiding internal data and methods from outside access", "Using the same method name in different classes", "Writing abstract methods"], ans: 1 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch10", num: "10", title: "Database with Python",
+    lessons: [
+      {
+        id: "l10", title: "SQLite Database Management",
+        tag: "Databases",
+        desc: "Connect Python to an SQLite database; create tables; perform CRUD operations using SQL.",
+        content: `
+<div class="section-heading"><span class="icon">🗃️</span> Python & SQLite</div>
+<p class="body-text">Python's built-in <code>sqlite3</code> module lets you create and manage a relational database directly from Python. SQLite stores data in a single file — perfect for A/L projects.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">import</span> sqlite3
+
+<span class="cm"># 1. Connect (creates file if not exists)</span>
+<span class="var">conn</span> = sqlite3.<span class="fn">connect</span>(<span class="str">"school.db"</span>)
+<span class="var">cursor</span> = <span class="var">conn</span>.<span class="fn">cursor</span>()
+
+<span class="cm"># 2. CREATE TABLE</span>
+<span class="var">cursor</span>.<span class="fn">execute</span>(<span class="str">"""
+    CREATE TABLE IF NOT EXISTS students (
+        id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        name    TEXT    NOT NULL,
+        age     INTEGER,
+        mark    REAL
+    )
+"""</span>)
+
+<span class="cm"># 3. INSERT</span>
+<span class="var">cursor</span>.<span class="fn">execute</span>(<span class="str">"INSERT INTO students (name, age, mark) VALUES (?,?,?)"</span>,
+               (<span class="str">"Amara"</span>, <span class="num">17</span>, <span class="num">88.5</span>))
+<span class="var">conn</span>.<span class="fn">commit</span>()   <span class="cm"># save changes</span>
+
+<span class="cm"># 4. SELECT (Read)</span>
+<span class="var">cursor</span>.<span class="fn">execute</span>(<span class="str">"SELECT * FROM students"</span>)
+<span class="var">rows</span> = <span class="var">cursor</span>.<span class="fn">fetchall</span>()
+<span class="kw">for</span> <span class="var">row</span> <span class="kw">in</span> <span class="var">rows</span>:
+    <span class="fn">print</span>(<span class="var">row</span>)
+
+<span class="cm"># 5. UPDATE</span>
+<span class="var">cursor</span>.<span class="fn">execute</span>(<span class="str">"UPDATE students SET mark=95 WHERE name='Amara'"</span>)
+<span class="var">conn</span>.<span class="fn">commit</span>()
+
+<span class="cm"># 6. DELETE</span>
+<span class="var">cursor</span>.<span class="fn">execute</span>(<span class="str">"DELETE FROM students WHERE mark < 50"</span>)
+<span class="var">conn</span>.<span class="fn">commit</span>()
+
+<span class="cm"># 7. Always close the connection</span>
+<span class="var">conn</span>.<span class="fn">close</span>()</pre>
+</div>
+<div class="section-heading"><span class="icon">🔍</span> SQL Query Essentials</div>
+<table class="data-table">
+  <thead><tr><th>Operation</th><th>SQL Syntax</th></tr></thead>
+  <tbody>
+    <tr><td>Select all</td><td><code>SELECT * FROM table</code></td></tr>
+    <tr><td>Select with condition</td><td><code>SELECT * FROM students WHERE mark > 70</code></td></tr>
+    <tr><td>Sort results</td><td><code>SELECT * FROM students ORDER BY mark DESC</code></td></tr>
+    <tr><td>Count rows</td><td><code>SELECT COUNT(*) FROM students</code></td></tr>
+    <tr><td>Average</td><td><code>SELECT AVG(mark) FROM students</code></td></tr>
+  </tbody>
+</table>
+<div class="info-box note"><strong>📌 ? Parameterised Queries</strong>Always use ? placeholders (not f-strings) when inserting user input into SQL. This prevents SQL injection attacks.</div>
+`,
+        quiz: [
+          { q: "Which Python module is used to work with SQLite databases?", opts: ["database3", "sqlite3", "sql_python", "dblib"], ans: 1 },
+          { q: "What does conn.commit() do?", opts: ["Closes the database", "Saves all pending changes to the database", "Creates a new table", "Starts a transaction"], ans: 1 },
+          { q: "Which SQL command adds a new row to a table?", opts: ["ADD INTO", "APPEND", "INSERT INTO", "UPDATE INTO"], ans: 2 },
+          { q: "Why should you use ? placeholders instead of f-strings in SQL queries?", opts: ["? is faster to type", "To prevent SQL injection attacks", "f-strings do not work in Python", "? returns more rows"], ans: 1 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch11", num: "11", title: "Searching Algorithms",
+    lessons: [
+      {
+        id: "l11", title: "Linear Search & Binary Search",
+        tag: "Algorithms",
+        desc: "Implement and compare linear search and binary search algorithms.",
+        content: `
+<div class="section-heading"><span class="icon">🔍</span> Linear (Sequential) Search</div>
+<p class="body-text">Linear search checks every element one by one until the target is found or the end is reached. Works on <strong>any</strong> list (sorted or unsorted).</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">def</span> <span class="fn">linear_search</span>(<span class="var">lst</span>, <span class="var">target</span>):
+    <span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">lst</span>)):
+        <span class="kw">if</span> <span class="var">lst</span>[<span class="var">i</span>] <span class="op">==</span> <span class="var">target</span>:
+            <span class="kw">return</span> <span class="var">i</span>   <span class="cm"># found — return index</span>
+    <span class="kw">return</span> <span class="op">-</span><span class="num">1</span>            <span class="cm"># not found</span>
+
+<span class="var">data</span> = [<span class="num">45</span>, <span class="num">12</span>, <span class="num">89</span>, <span class="num">33</span>, <span class="num">67</span>]
+<span class="fn">print</span>(<span class="fn">linear_search</span>(<span class="var">data</span>, <span class="num">89</span>))   <span class="cm"># 2</span>
+<span class="fn">print</span>(<span class="fn">linear_search</span>(<span class="var">data</span>, <span class="num">100</span>))  <span class="cm"># -1</span></pre>
+</div>
+<div class="section-heading"><span class="icon">🎯</span> Binary Search</div>
+<p class="body-text">Binary search is much faster but requires a <strong>sorted</strong> list. It repeatedly halves the search space by comparing the target with the middle element.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">def</span> <span class="fn">binary_search</span>(<span class="var">lst</span>, <span class="var">target</span>):
+    <span class="var">low</span>, <span class="var">high</span> = <span class="num">0</span>, <span class="fn">len</span>(<span class="var">lst</span>) <span class="op">-</span> <span class="num">1</span>
+    <span class="kw">while</span> <span class="var">low</span> <span class="op">&lt;=</span> <span class="var">high</span>:
+        <span class="var">mid</span> = (<span class="var">low</span> <span class="op">+</span> <span class="var">high</span>) <span class="op">//</span> <span class="num">2</span>
+        <span class="kw">if</span> <span class="var">lst</span>[<span class="var">mid</span>] <span class="op">==</span> <span class="var">target</span>:
+            <span class="kw">return</span> <span class="var">mid</span>
+        <span class="kw">elif</span> <span class="var">lst</span>[<span class="var">mid</span>] <span class="op">&lt;</span> <span class="var">target</span>:
+            <span class="var">low</span> = <span class="var">mid</span> <span class="op">+</span> <span class="num">1</span>
+        <span class="kw">else</span>:
+            <span class="var">high</span> = <span class="var">mid</span> <span class="op">-</span> <span class="num">1</span>
+    <span class="kw">return</span> <span class="op">-</span><span class="num">1</span>
+
+<span class="var">sorted_data</span> = [<span class="num">12</span>, <span class="num">33</span>, <span class="num">45</span>, <span class="num">67</span>, <span class="num">89</span>]   <span class="cm"># MUST be sorted!</span>
+<span class="fn">print</span>(<span class="fn">binary_search</span>(<span class="var">sorted_data</span>, <span class="num">67</span>))  <span class="cm"># 3</span></pre>
+</div>
+<div class="section-heading"><span class="icon">📊</span> Comparison</div>
+<table class="data-table">
+  <thead><tr><th>Property</th><th>Linear Search</th><th>Binary Search</th></tr></thead>
+  <tbody>
+    <tr><td>List requirement</td><td>Any (unsorted OK)</td><td>Must be SORTED</td></tr>
+    <tr><td>Best case</td><td>O(1) — first element</td><td>O(1) — middle element</td></tr>
+    <tr><td>Worst case</td><td>O(n) — check all</td><td>O(log n) — halving</td></tr>
+    <tr><td>Better for</td><td>Small or unsorted data</td><td>Large sorted data</td></tr>
+  </tbody>
+</table>
+`,
+        quiz: [
+          { q: "Binary search requires the list to be:", opts: ["Sorted in descending order only", "Sorted (ascending or descending)", "Unsorted", "Containing unique values only"], ans: 1 },
+          { q: "What is the WORST CASE time complexity of linear search on n elements?", opts: ["O(1)", "O(log n)", "O(n)", "O(n²)"], ans: 2 },
+          { q: "In binary search, after checking the middle element, if the target is LARGER, what happens?", opts: ["Search the left half", "Search the right half", "Return -1", "Compare with the first element"], ans: 1 },
+          { q: "What value does a search function typically return if the target is NOT found?", opts: ["0", "None", "-1", "False"], ans: 2 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch12", num: "12", title: "Sorting Algorithms",
+    lessons: [
+      {
+        id: "l12", title: "Bubble, Selection & Insertion Sort",
+        tag: "Algorithms",
+        desc: "Implement three classical sorting algorithms and trace them step-by-step.",
+        content: `
+<div class="section-heading"><span class="icon">🫧</span> Bubble Sort</div>
+<p class="body-text">Repeatedly compares adjacent elements and swaps them if they are in the wrong order. The largest element "bubbles up" to the end each pass.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">def</span> <span class="fn">bubble_sort</span>(<span class="var">lst</span>):
+    <span class="var">n</span> = <span class="fn">len</span>(<span class="var">lst</span>)
+    <span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">n</span> <span class="op">-</span> <span class="num">1</span>):
+        <span class="kw">for</span> <span class="var">j</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="var">n</span> <span class="op">-</span> <span class="var">i</span> <span class="op">-</span> <span class="num">1</span>):
+            <span class="kw">if</span> <span class="var">lst</span>[<span class="var">j</span>] <span class="op">></span> <span class="var">lst</span>[<span class="var">j</span><span class="op">+</span><span class="num">1</span>]:
+                <span class="var">lst</span>[<span class="var">j</span>], <span class="var">lst</span>[<span class="var">j</span><span class="op">+</span><span class="num">1</span>] = <span class="var">lst</span>[<span class="var">j</span><span class="op">+</span><span class="num">1</span>], <span class="var">lst</span>[<span class="var">j</span>]
+
+<span class="var">data</span> = [<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>]
+<span class="fn">bubble_sort</span>(<span class="var">data</span>)
+<span class="fn">print</span>(<span class="var">data</span>)   <span class="cm"># [12, 22, 25, 34, 64]</span></pre>
+</div>
+<div class="section-heading"><span class="icon">🎯</span> Selection Sort</div>
+<p class="body-text">Finds the minimum element in the unsorted portion and places it at the beginning.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">def</span> <span class="fn">selection_sort</span>(<span class="var">lst</span>):
+    <span class="var">n</span> = <span class="fn">len</span>(<span class="var">lst</span>)
+    <span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">n</span>):
+        <span class="var">min_idx</span> = <span class="var">i</span>
+        <span class="kw">for</span> <span class="var">j</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">i</span><span class="op">+</span><span class="num">1</span>, <span class="var">n</span>):
+            <span class="kw">if</span> <span class="var">lst</span>[<span class="var">j</span>] <span class="op">&lt;</span> <span class="var">lst</span>[<span class="var">min_idx</span>]:
+                <span class="var">min_idx</span> = <span class="var">j</span>
+        <span class="var">lst</span>[<span class="var">i</span>], <span class="var">lst</span>[<span class="var">min_idx</span>] = <span class="var">lst</span>[<span class="var">min_idx</span>], <span class="var">lst</span>[<span class="var">i</span>]
+
+<span class="var">data</span> = [<span class="num">64</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>, <span class="num">11</span>]
+<span class="fn">selection_sort</span>(<span class="var">data</span>)
+<span class="fn">print</span>(<span class="var">data</span>)   <span class="cm"># [11, 12, 22, 25, 64]</span></pre>
+</div>
+<div class="section-heading"><span class="icon">🃏</span> Insertion Sort</div>
+<p class="body-text">Builds a sorted portion one element at a time, "inserting" each new element into the correct position — like sorting playing cards in your hand.</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">def</span> <span class="fn">insertion_sort</span>(<span class="var">lst</span>):
+    <span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(<span class="var">lst</span>)):
+        <span class="var">key</span> = <span class="var">lst</span>[<span class="var">i</span>]
+        <span class="var">j</span> = <span class="var">i</span> <span class="op">-</span> <span class="num">1</span>
+        <span class="kw">while</span> <span class="var">j</span> <span class="op">>=</span> <span class="num">0</span> <span class="kw">and</span> <span class="var">lst</span>[<span class="var">j</span>] <span class="op">></span> <span class="var">key</span>:
+            <span class="var">lst</span>[<span class="var">j</span> <span class="op">+</span> <span class="num">1</span>] = <span class="var">lst</span>[<span class="var">j</span>]
+            <span class="var">j</span> <span class="op">-=</span> <span class="num">1</span>
+        <span class="var">lst</span>[<span class="var">j</span> <span class="op">+</span> <span class="num">1</span>] = <span class="var">key</span>
+
+<span class="var">data</span> = [<span class="num">5</span>, <span class="num">2</span>, <span class="num">4</span>, <span class="num">6</span>, <span class="num">1</span>]
+<span class="fn">insertion_sort</span>(<span class="var">data</span>)
+<span class="fn">print</span>(<span class="var">data</span>)   <span class="cm"># [1, 2, 4, 5, 6]</span></pre>
+</div>
+<table class="data-table">
+  <thead><tr><th>Algorithm</th><th>Key Idea</th><th>Worst Case</th></tr></thead>
+  <tbody>
+    <tr><td>Bubble Sort</td><td>Swap adjacent elements repeatedly</td><td>O(n²)</td></tr>
+    <tr><td>Selection Sort</td><td>Find minimum, swap to front</td><td>O(n²)</td></tr>
+    <tr><td>Insertion Sort</td><td>Insert into correct position</td><td>O(n²)</td></tr>
+  </tbody>
+</table>
+`,
+        quiz: [
+          { q: "In bubble sort, what happens in each pass?", opts: ["The smallest element moves to the front", "Adjacent elements are compared and swapped if out of order", "The list is split in half", "A key element is inserted into correct position"], ans: 1 },
+          { q: "Selection sort always finds the ___ element in the unsorted section and moves it to the front:", opts: ["Middle", "Maximum", "Minimum", "First"], ans: 2 },
+          { q: "Which sorting algorithm resembles sorting playing cards in your hand?", opts: ["Bubble sort", "Selection sort", "Insertion sort", "Quick sort"], ans: 2 },
+          { q: "All three basic sorting algorithms have worst-case complexity of:", opts: ["O(n)", "O(log n)", "O(n²)", "O(n log n)"], ans: 2 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch13", num: "13", title: "Exception Handling",
+    lessons: [
+      {
+        id: "l13", title: "try, except, finally",
+        tag: "Robust Code",
+        desc: "Write robust programs that gracefully handle runtime errors using Python's exception handling.",
+        content: `
+<div class="section-heading"><span class="icon">🛡️</span> Types of Errors</div>
+<table class="data-table">
+  <thead><tr><th>Error Type</th><th>When?</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>Syntax Error</td><td>Before running (translation)</td><td><code>if x = 5:</code> (should be ==)</td></tr>
+    <tr><td>Runtime Error (Exception)</td><td>During execution</td><td>Dividing by zero, file not found</td></tr>
+    <tr><td>Logic Error</td><td>Program runs but gives wrong result</td><td>Using + instead of *</td></tr>
+  </tbody>
+</table>
+<div class="section-heading"><span class="icon">⚡</span> Exception Handling Syntax</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="kw">try</span>:
+    <span class="var">num</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter a number: "</span>))
+    <span class="var">result</span> = <span class="num">100</span> <span class="op">/</span> <span class="var">num</span>
+    <span class="fn">print</span>(<span class="str">f"Result: </span>{<span class="var">result</span>}<span class="str">"</span>)
+
+<span class="kw">except</span> <span class="cls">ValueError</span>:
+    <span class="fn">print</span>(<span class="str">"Please enter a valid integer!"</span>)
+
+<span class="kw">except</span> <span class="cls">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="str">"Cannot divide by zero!"</span>)
+
+<span class="kw">except</span> <span class="cls">Exception</span> <span class="kw">as</span> <span class="var">e</span>:
+    <span class="fn">print</span>(<span class="str">f"Unexpected error: </span>{<span class="var">e</span>}<span class="str">"</span>)
+
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"No errors occurred!"</span>)   <span class="cm"># runs if NO exception</span>
+
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="str">"This always runs."</span>)    <span class="cm"># cleanup code</span></pre>
+</div>
+<div class="section-heading"><span class="icon">📋</span> Common Python Exceptions</div>
+<table class="data-table">
+  <thead><tr><th>Exception</th><th>Cause</th></tr></thead>
+  <tbody>
+    <tr><td><code>ValueError</code></td><td>Wrong type of value (e.g., int("abc"))</td></tr>
+    <tr><td><code>ZeroDivisionError</code></td><td>Dividing by zero</td></tr>
+    <tr><td><code>FileNotFoundError</code></td><td>Opening a file that does not exist</td></tr>
+    <tr><td><code>IndexError</code></td><td>List index out of range</td></tr>
+    <tr><td><code>KeyError</code></td><td>Dictionary key does not exist</td></tr>
+    <tr><td><code>TypeError</code></td><td>Operation on wrong data type</td></tr>
+    <tr><td><code>NameError</code></td><td>Using an undefined variable</td></tr>
+  </tbody>
+</table>
+<div class="info-box tip"><strong>✅ Best Practice</strong>Always catch specific exceptions (ValueError, ZeroDivisionError) rather than a bare <code>except:</code>. This makes debugging easier and prevents hiding unexpected errors.</div>
+`,
+        quiz: [
+          { q: "Which block in exception handling ALWAYS executes, whether or not an exception occurs?", opts: ["try", "except", "else", "finally"], ans: 3 },
+          { q: "What exception is raised when you try to convert 'abc' to an integer?", opts: ["TypeError", "ValueError", "NameError", "RuntimeError"], ans: 1 },
+          { q: "Which type of error causes a program to produce wrong results without crashing?", opts: ["Syntax Error", "Runtime Error", "Logic Error", "Compile Error"], ans: 2 },
+          { q: "What is the purpose of the 'else' block in try/except?", opts: ["Always executes", "Executes only if an exception was raised", "Executes only if NO exception was raised", "Executes before try"], ans: 2 },
+        ]
+      }
+    ]
+  },
+  {
+    id: "ch14", num: "14", title: "Revision & Exam Prep",
+    lessons: [
+      {
+        id: "l14", title: "Summary & Past Paper Techniques",
+        tag: "Exam Prep",
+        desc: "Quick-reference summary of all syllabus topics and strategies for the A/L ICT Python questions.",
+        content: `
+<div class="section-heading"><span class="icon">📋</span> Complete Topic Checklist</div>
+<table class="data-table">
+  <thead><tr><th>#</th><th>Topic</th><th>Key Points to Know</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Problem Solving</td><td>6-step process, top-down design, flowchart symbols, pseudocode</td></tr>
+    <tr><td>2</td><td>Paradigms & Translators</td><td>Imperative, OOP, compiler vs interpreter, IDE features</td></tr>
+    <tr><td>3</td><td>Python Basics</td><td>Variables, 5 data types, operators (+,-,*,/,//,%,**), input(), print()</td></tr>
+    <tr><td>4</td><td>Control Structures</td><td>if/elif/else, for, while, break, continue, nested loops</td></tr>
+    <tr><td>5</td><td>Functions</td><td>def, parameters, return, scope (local/global), recursion (base case)</td></tr>
+    <tr><td>6</td><td>Data Structures</td><td>List methods, tuple immutability, set operations, dict key-value</td></tr>
+    <tr><td>7</td><td>Strings</td><td>Indexing, slicing, upper/lower/replace/split/strip/find</td></tr>
+    <tr><td>8</td><td>File Handling</td><td>open() modes r/w/a, with statement, readline/readlines, try/except</td></tr>
+    <tr><td>9</td><td>OOP</td><td>class, __init__, self, attributes, methods, inheritance, super(), 4 pillars</td></tr>
+    <tr><td>10</td><td>Database</td><td>sqlite3, connect, cursor, execute, commit, close, CRUD SQL</td></tr>
+    <tr><td>11</td><td>Searching</td><td>Linear O(n), Binary O(log n) — must be sorted</td></tr>
+    <tr><td>12</td><td>Sorting</td><td>Bubble (swap adjacent), Selection (find min), Insertion (insert key)</td></tr>
+    <tr><td>13</td><td>Exceptions</td><td>try/except/else/finally, ValueError, ZeroDivisionError, FileNotFoundError</td></tr>
+  </tbody>
+</table>
+<div class="section-heading"><span class="icon">🎯</span> Exam Strategy Tips</div>
+<div class="concept-grid">
+  <div class="concept-card"><div class="concept-icon">📖</div><div class="concept-name">Read the Code Carefully</div><div class="concept-desc">For "trace" questions, work through each line step-by-step writing variable values.</div></div>
+  <div class="concept-card"><div class="concept-icon">🔢</div><div class="concept-name">Show Working</div><div class="concept-desc">Write out algorithm steps or variable tables even for short answers — marks are awarded for process.</div></div>
+  <div class="concept-card"><div class="concept-icon">📝</div><div class="concept-name">Write Correct Indentation</div><div class="concept-desc">Python is indentation-sensitive. In exam answers, indent your code clearly and consistently.</div></div>
+  <div class="concept-card"><div class="concept-icon">⏱️</div><div class="concept-name">Time Management</div><div class="concept-desc">Python carries 12–18 marks. Spend about 25–30 minutes on Unit 09 questions.</div></div>
+</div>
+<div class="section-heading"><span class="icon">⚡</span> Quick Syntax Reference</div>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">PYTHON — QUICK REF</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+  <pre><span class="cm"># List ops</span>
+<span class="var">lst</span>.<span class="fn">append</span>(<span class="var">x</span>) | <span class="var">lst</span>.<span class="fn">remove</span>(<span class="var">x</span>) | <span class="var">lst</span>.<span class="fn">sort</span>() | <span class="var">lst</span>.<span class="fn">reverse</span>() | <span class="fn">len</span>(<span class="var">lst</span>)
+
+<span class="cm"># String ops</span>
+<span class="var">s</span>.<span class="fn">upper</span>() | <span class="var">s</span>.<span class="fn">lower</span>() | <span class="var">s</span>.<span class="fn">strip</span>() | <span class="var">s</span>.<span class="fn">split</span>() | <span class="var">s</span>.<span class="fn">replace</span>(<span class="var">a</span>,<span class="var">b</span>) | <span class="var">s</span>.<span class="fn">find</span>(<span class="var">x</span>)
+
+<span class="cm"># File</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"f.txt"</span>,<span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>: <span class="var">data</span>=<span class="var">f</span>.<span class="fn">read</span>()
+
+<span class="cm"># Class</span>
+<span class="kw">class</span> <span class="cls">MyClass</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">x</span>): <span class="var">self</span>.<span class="var">x</span>=<span class="var">x</span>
+
+<span class="cm"># Database</span>
+<span class="kw">import</span> sqlite3
+<span class="var">conn</span>=sqlite3.<span class="fn">connect</span>(<span class="str">"db.db"</span>); <span class="var">c</span>=<span class="var">conn</span>.<span class="fn">cursor</span>()
+<span class="var">c</span>.<span class="fn">execute</span>(<span class="str">"SQL HERE"</span>); <span class="var">conn</span>.<span class="fn">commit</span>(); <span class="var">conn</span>.<span class="fn">close</span>()</pre>
+</div>
+<div class="info-box tip"><strong>🏆 You've covered the entire A/L ICT Python syllabus!</strong>Revise past papers from 2019–2024, practice writing code by hand, and pay special attention to tracing algorithms step-by-step. Good luck! 🇱🇰</div>
+`,
+        quiz: [
+          { q: "What is the time complexity of binary search?", opts: ["O(n²)", "O(n)", "O(log n)", "O(1)"], ans: 2 },
+          { q: "Which Python keyword is used to define a class?", opts: ["def", "object", "class", "struct"], ans: 2 },
+          { q: "How many marks does the Python unit typically carry in the A/L ICT paper?", opts: ["5–8 marks", "12–18 marks", "20–25 marks", "30+ marks"], ans: 1 },
+          { q: "Which sorting algorithm works by finding the MINIMUM element and placing it at the start?", opts: ["Bubble Sort", "Insertion Sort", "Selection Sort", "Merge Sort"], ans: 2 },
+        ]
+      }
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let completedLessons = new Set(JSON.parse(localStorage.getItem('al_python_done') || '[]'));
+let currentLessonId = null;
+let allLessons = [];
+CHAPTERS.forEach(ch => ch.lessons.forEach(l => allLessons.push(l)));
+
+function saveProgress() {
+  localStorage.setItem('al_python_done', JSON.stringify([...completedLessons]));
+}
+
+// ═══════════════════════════════════════════
+//  BUILD SIDEBAR
+// ═══════════════════════════════════════════
+function buildSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.innerHTML = '';
+  CHAPTERS.forEach(ch => {
+    const sec = document.createElement('div');
+    sec.className = 'sidebar-section';
+    const doneCount = ch.lessons.filter(l => completedLessons.has(l.id)).length;
+    sec.innerHTML = `
+      <div class="sidebar-chapter" data-ch="${ch.id}" onclick="toggleChapter('${ch.id}')">
+        <span class="chapter-number">${ch.num}</span>
+        <span class="chapter-title">${ch.title}</span>
+        <span class="chapter-status">${doneCount}/${ch.lessons.length}</span>
+      </div>
+      <div class="sidebar-lessons" id="sl-${ch.id}">
+        ${ch.lessons.map(l => `
+          <div class="sidebar-lesson ${completedLessons.has(l.id)?'done':''} ${currentLessonId===l.id?'active':''}"
+               onclick="loadLesson('${l.id}')">${l.title}</div>
+        `).join('')}
+      </div>
+    `;
+    sidebar.appendChild(sec);
+  });
+}
+
+function toggleChapter(chId) {
+  const el = document.getElementById('sl-'+chId);
+  el.classList.toggle('open');
+  document.querySelector(`[data-ch="${chId}"]`).classList.toggle('active');
+}
+
+// ═══════════════════════════════════════════
+//  LOAD LESSON
+// ═══════════════════════════════════════════
+function loadLesson(lessonId) {
+  currentLessonId = lessonId;
+  const lesson = allLessons.find(l => l.id === lessonId);
+  if (!lesson) return;
+
+  document.getElementById('heroView').style.display = 'none';
+  const container = document.getElementById('lessonContainer');
+  container.style.display = 'block';
+
+  const idx = allLessons.indexOf(lesson);
+  const prevLesson = idx > 0 ? allLessons[idx - 1] : null;
+  const nextLesson = idx < allLessons.length - 1 ? allLessons[idx + 1] : null;
+
+  container.innerHTML = `
+    <div class="lesson-card active">
+      <div class="lesson-header">
+        <div class="lesson-tag">${lesson.tag}</div>
+        <div class="lesson-title">${lesson.title}</div>
+        <div class="lesson-desc">${lesson.desc}</div>
+      </div>
+      ${lesson.content}
+      ${buildQuiz(lesson)}
+      <div class="lesson-nav">
+        ${prevLesson ? `<button class="nav-btn prev" onclick="loadLesson('${prevLesson.id}')">← ${prevLesson.title}</button>` : ''}
+        <button class="nav-btn complete" onclick="markComplete('${lesson.id}')">
+          ${completedLessons.has(lesson.id) ? '✓ Completed' : 'Mark as Complete ✓'}
+        </button>
+        ${nextLesson ? `<button class="nav-btn next" onclick="loadLesson('${nextLesson.id}')">Next: ${nextLesson.title} →</button>` : ''}
+      </div>
+    </div>
+  `;
+
+  buildSidebar();
+  updateProgress();
+  container.scrollTop = 0;
+
+  // Open the right chapter
+  const chapter = CHAPTERS.find(ch => ch.lessons.some(l => l.id === lessonId));
+  if (chapter) {
+    const el = document.getElementById('sl-' + chapter.id);
+    if (!el.classList.contains('open')) toggleChapter(chapter.id);
+  }
+}
+
+function buildQuiz(lesson) {
+  if (!lesson.quiz || lesson.quiz.length === 0) return '';
+  const qs = lesson.quiz.map((q, qi) => `
+    <div class="quiz-q" id="qq-${lesson.id}-${qi}">
+      <div class="quiz-question">Q${qi+1}. ${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, oi) => `
+          <button class="quiz-option" id="opt-${lesson.id}-${qi}-${oi}" onclick="answerQ('${lesson.id}',${qi},${oi},${q.ans})">
+            ${String.fromCharCode(65+oi)}. ${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="fb-${lesson.id}-${qi}"></div>
+    </div>
+  `).join('');
+  return `
+    <div class="quiz-section">
+      <div class="quiz-title">📝 Knowledge Check</div>
+      <div class="quiz-desc">Test your understanding of this lesson. Select the best answer for each question.</div>
+      ${qs}
+    </div>
+  `;
+}
+
+function answerQ(lessonId, qi, selected, correct) {
+  const opts = document.querySelectorAll(`[id^="opt-${lessonId}-${qi}-"]`);
+  const fb = document.getElementById(`fb-${lessonId}-${qi}`);
+  opts.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === selected && selected !== correct) btn.classList.add('wrong');
+  });
+  if (selected === correct) {
+    fb.textContent = '✓ Correct!'; fb.className = 'quiz-feedback ok';
+  } else {
+    fb.textContent = `✗ Incorrect. The correct answer is ${String.fromCharCode(65+correct)}.`;
+    fb.className = 'quiz-feedback no';
+  }
+}
+
+function markComplete(lessonId) {
+  completedLessons.add(lessonId);
+  saveProgress();
+  buildSidebar();
+  updateProgress();
+  const btn = document.querySelector('.nav-btn.complete');
+  if (btn) btn.textContent = '✓ Completed';
+}
+
+function updateProgress() {
+  const total = allLessons.length;
+  const done = completedLessons.size;
+  const pct = (done / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${done} / ${total} completed`;
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+buildSidebar();
+updateProgress();
+</script>
+</body>
+</html>
